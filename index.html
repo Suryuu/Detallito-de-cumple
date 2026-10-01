@@ -1,541 +1,621 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para July ✨</title>
-<meta name="theme-color" content="#f7dce7">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fbf0f2">
+  <meta name="description" content="Una pequeña cartita de cumpleaños para July. 🌷">
+  <meta property="og:title" content="Para July · Feliz cumpleaños 🌷">
+  <meta property="og:description" content="Un pequeño regalo, hecho con mucho cariño.">
+  <meta property="og:type" content="website">
+  <title>Para July · Feliz cumpleaños 🌷</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23fbf0f2'/%3E%3Cpath d='M32 56V28M32 48Q13 47 15 35Q29 36 32 48M32 43Q50 42 48 31Q35 33 32 43' fill='%23809b78' stroke='%23809b78' stroke-width='3'/%3E%3Cpath d='M17 13Q23 12 26 18L32 8L38 18Q43 12 47 13L45 28Q32 44 19 28Z' fill='%23dc91aa'/%3E%3C/svg%3E">
+  <style>
+    /* 01. PALETA Y TIPOGRAFÍA — cambia aquí los colores de toda la carta. */
+    :root {
+      color-scheme: light;
+      --paper:#fffdf9; --background:#fbf0f2; --ink:#594951; --muted:#836870;
+      --rose:#a65771; --rose-light:#ebc5d1; --line:#edd5dc; --blue:#eaf3f7;
+      --night:#252c44; --sans:"Trebuchet MS","Segoe UI",sans-serif;
+      --serif:Georgia,"Times New Roman",serif;
+    }
+    * {box-sizing:border-box}
+    html {scroll-behavior:smooth}
+    body {margin:0; color:var(--ink); background:var(--background); font-family:var(--sans); -webkit-tap-highlight-color:transparent}
+    button,a {touch-action:manipulation}
+    button {font:inherit; cursor:pointer}
+    a {color:inherit}
+    button, input {font-size:1rem}
+    button:focus-visible,a:focus-visible {outline:3px solid #a55474; outline-offset:5px}
+    [tabindex="-1"]:focus {outline:none}
+    ::selection {color:#592c3e; background:#f5d9e2}
+    [hidden] {display:none!important}
+    svg {display:block}
+    .symbols {position:absolute; width:0; height:0; overflow:hidden}
+    .icon {width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round}
+    .inline-emoji {display:inline-block; width:1em; height:1em; vertical-align:-.12em; position:relative; color:#bc8197}
+    .inline-emoji .icon {width:100%; height:100%; stroke-width:1.3}
+    .inline-emoji.heart .icon {fill:#fffdf9}
+    .night .inline-emoji {color:#ebc5d8}
+    .visually-hidden {position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0}
+    .skip {position:fixed; left:16px; top:-100px; z-index:100; background:white; padding:12px 18px; border-radius:8px}
+    .skip:focus {top:12px}
+    .eyebrow {font:11px/1.6 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--muted)}
+    .progress {position:fixed; inset:0 0 auto; height:3px; z-index:55; background:#ead8df40; pointer-events:none}
+    .progress span {display:block; height:100%; background:#b56e89; transform:scaleX(0); transform-origin:left}
 
-<style>
-:root{
-  --rosa:#efbfd2;
-  --rosa-claro:#f9e8ef;
-  --blanco:#fffafc;
-  --texto:#5c4652;
-  --texto-suave:#816c77;
-  --noche:#171829;
-  --noche2:#29253e;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
-  color:var(--texto);
-  background:#fff8fb;
-  overflow-x:hidden;
-}
-a,button{font:inherit}
-.screen{
-  min-height:100vh;
-  position:relative;
-  display:grid;
-  place-items:center;
-  padding:28px 20px;
-  overflow:hidden;
-}
+    /* 02. CONTROLES — siempre accesibles, sin tapar el texto. */
+    .topbar {position:fixed; top:3px; left:0; width:100%; z-index:50; padding:8px max(18px,env(safe-area-inset-left)); color:var(--ink); background:#fbf0f2ed; border-bottom:1px solid #ead7df70; transition:background .5s,color .5s}
+    @supports (backdrop-filter:blur(12px)) {.topbar {background:#fbf0f2d9; backdrop-filter:blur(12px)}}
+    .topbar-inner {max-width:1100px; margin:auto; display:flex; justify-content:space-between; align-items:center; gap:8px}
+    .brand {font:italic 22px var(--serif); text-decoration:none; min-height:44px; display:inline-flex; align-items:center; gap:9px; white-space:nowrap}
+    .brand .icon {width:20px; height:24px; color:var(--rose)}
+    .controls {display:flex; align-items:center; gap:7px}
+    .control {display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; min-width:44px; border:1px solid #bd809633; background:#fffaf9ab; border-radius:999px; color:inherit; padding:8px 13px; font-size:12px; transition:background .2s}
+    .control:hover {background:#fff}
+    .motion-control {padding:10px}
+    .motion-control .icon {width:19px; height:19px}
+    .music-control[aria-busy="true"] {opacity:.7}
+    .music-control[aria-pressed="true"] {border-color:#b8798f; background:#f5dfe7}
+    .music-control .pause-icon {display:none}
+    .music-control[aria-pressed="true"] .play-icon {display:none}
+    .music-control[aria-pressed="true"] .pause-icon {display:block}
+    .toast {position:fixed; top:78px; left:50%; transform:translateX(-50%); z-index:60; width:max-content; max-width:calc(100% - 32px); padding:13px 18px; border:1px solid var(--line); border-radius:13px; background:var(--paper); color:var(--ink); font-size:13px; line-height:1.5; box-shadow:0 6px 24px #60414c12; text-align:center}
+    .reading-nav {position:fixed; bottom:max(12px,env(safe-area-inset-bottom)); left:50%; z-index:50; transform:translate(-50%,110px); opacity:0; visibility:hidden; transition:transform .4s,opacity .4s,visibility .4s; display:flex; width:min(370px,calc(100% - 26px)); padding:5px; border:1px solid #ead4dd; border-radius:999px; background:#fffdf9f5; box-shadow:0 5px 25px #60414c15; color:var(--muted)}
+    .is-reading .reading-nav {transform:translate(-50%,0); opacity:1; visibility:visible}
+    .reading-nav a {flex:1; min-height:44px; display:flex; align-items:center; justify-content:center; border-radius:99px; font-size:11px; text-decoration:none; white-space:nowrap; transition:background .25s,color .25s}
+    .reading-nav a[aria-current="location"] {background:#f4e1e8; color:#873f5b}
 
-/* ---------- PORTADA / AMANECER ---------- */
-.hero{
-  background:
-    radial-gradient(circle at 50% 20%,rgba(255,255,255,.92),transparent 16%),
-    linear-gradient(180deg,#f5d9e6 0%,#f6cbd9 30%,#ffd9cf 57%,#fff0d9 76%,#dbe4d7 100%);
-}
-.sun{
-  position:absolute;
-  top:13%;
-  left:50%;
-  width:130px;
-  height:130px;
-  transform:translateX(-50%);
-  border-radius:50%;
-  background:radial-gradient(circle,#fffef8 0 28%,#fff0c7 55%,rgba(255,237,194,.1) 72%);
-  box-shadow:0 0 65px rgba(255,239,194,.85);
-}
-.mountain{
-  position:absolute;
-  bottom:-3vh;
-  border-radius:55% 55% 0 0/70% 70% 0 0;
-}
-.m1{left:-14%;width:75%;height:39vh;background:#b9cab9}
-.m2{right:-15%;width:79%;height:46vh;background:#a5b9a8}
-.m3{left:17%;width:78%;height:29vh;background:#8fa397;opacity:.93}
-.forest{
-  position:absolute;
-  left:0;right:0;bottom:5%;
-  height:20%;
-  background:linear-gradient(to top,rgba(63,80,69,.48),transparent);
-  clip-path:polygon(
-    0 100%,0 72%,3% 56%,6% 75%,9% 45%,12% 71%,15% 53%,18% 74%,
-    21% 39%,24% 72%,27% 55%,30% 75%,33% 44%,36% 71%,39% 51%,42% 73%,
-    45% 38%,48% 72%,51% 50%,54% 74%,57% 43%,60% 72%,63% 56%,66% 74%,
-    69% 41%,72% 72%,75% 52%,78% 74%,81% 45%,84% 71%,87% 54%,90% 74%,
-    93% 43%,96% 73%,100% 51%,100% 100%
-  );
-  opacity:.56;
-}
-.glass{
-  position:relative;
-  z-index:3;
-  width:min(92vw,620px);
-  padding:38px 29px;
-  text-align:center;
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:30px;
-  background:rgba(255,255,255,.52);
-  backdrop-filter:blur(15px);
-  -webkit-backdrop-filter:blur(15px);
-  box-shadow:0 22px 70px rgba(92,70,82,.15);
-  animation:appear 1.1s ease both;
-}
-@keyframes appear{
-  from{opacity:0;transform:translateY(18px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.small{
-  font-size:.82rem;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:#826b77;
-}
-h1{
-  margin:10px 0 12px;
-  font-size:clamp(2.6rem,9vw,5rem);
-  line-height:1;
-  letter-spacing:-.045em;
-  color:#725363;
-}
-.hero-text{
-  max-width:460px;
-  margin:0 auto 25px;
-  font-size:1.08rem;
-  line-height:1.75;
-}
-.btn{
-  border:0;
-  border-radius:999px;
-  padding:14px 23px;
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  gap:9px;
-  text-decoration:none;
-  cursor:pointer;
-  font-weight:650;
-  color:#684b59;
-  background:linear-gradient(90deg,#fff,#ffe9f2);
-  box-shadow:0 10px 28px rgba(116,77,96,.16);
-  transition:transform .2s ease,box-shadow .2s ease;
-}
-.btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 14px 34px rgba(116,77,96,.22);
-}
+    /* 03. PORTADA — ilustración local + papelería rosa y blanca. */
+    .cover {position:relative; isolation:isolate; min-height:100svh; padding:103px 22px 62px; display:grid; place-items:center; overflow:hidden;
+      background:radial-gradient(ellipse at 12% 18%,#fffaf9 0,transparent 45%),radial-gradient(ellipse at 90% 75%,#e5f0f7 0,transparent 50%),#fbf0f2}
+    .cover::before {content:""; position:absolute; inset:0; z-index:-1; opacity:.35; background-image:linear-gradient(90deg,#e8c5d22b 50%,transparent 50%),linear-gradient(#e8c5d22b 50%,transparent 50%); background-size:46px 46px; mask-image:linear-gradient(#000,transparent 90%)}
+    .cover-paper {position:relative; width:min(100%,740px); text-align:center; padding:37px 22px 32px; background:var(--paper); border:1px solid #edcbd7; border-radius:130px 130px 12px 12px / 44px 44px 12px 12px; box-shadow:0 18px 60px #8c597416,7px 9px 0 -2px #f6e4eb,7px 9px 0 -1px #e7cbd5}
+    .cover-paper::before {content:""; position:absolute; inset:9px; border:1px dashed #dbaec0; border-radius:inherit; pointer-events:none; opacity:.8}
+    .cover-date {display:inline-flex; align-items:center; gap:14px; margin:0 0 9px; color:#856776; font-size:10px; letter-spacing:.22em; text-transform:uppercase}
+    .cover-date::before,.cover-date::after {content:""; width:23px; height:1px; background:#d7b4c2}
+    h1 {font:italic 78px/.98 var(--serif); font-weight:normal; letter-spacing:-.055em; margin:8px 0 11px; color:var(--rose)}
+    .cover-greeting {font:17px/1.6 var(--sans); color:#82616d; margin:0}
+    .cover-illustration {display:block; width:min(104%,485px); height:auto; aspect-ratio:3/2; margin:9px auto 0; object-fit:contain; animation:breathe 8s ease-in-out infinite; position:relative}
+    .cover-copy {max-width:320px; font:italic 17px/1.7 var(--serif); margin:3px auto 21px; color:#745961}
+    .primary-link {position:relative; display:inline-flex; justify-content:center; align-items:center; gap:15px; min-height:52px; padding:14px 26px; background:#a75b74; border:1px solid #a75b74; color:#fffafc; text-decoration:none; border-radius:99px; font:14px var(--sans); box-shadow:0 6px 14px #a75b7423; transition:transform .25s,background .25s}
+    .primary-link:hover {transform:translateY(-2px); background:#92475f}
+    .primary-link:active {transform:translateY(0)}
+    .primary-link .icon {width:19px; height:19px}
+    .cover-hint {font:11px/1.7 var(--sans); color:#896b76; margin:14px 0 0}
+    .ribbon {position:absolute; width:84px; height:51px; top:-25px; left:50%; transform:translateX(-50%) rotate(-5deg); color:#bb738d; filter:drop-shadow(0 4px 3px #e1b6c633)}
+    .floating-mark {position:absolute; pointer-events:none; color:#bf8098; font:28px var(--serif); animation:drift 9s ease-in-out infinite}
+    .mark-one {top:24%; left:max(4%,calc(50% - 445px)); transform:rotate(-13deg)}
+    .mark-two {top:64%; right:max(4%,calc(50% - 444px)); animation-delay:-3s; color:#8fabbf}
+    .mark-three {top:12%; right:12%; font-size:18px; animation-delay:-5s}
+    @keyframes breathe {50% {transform:translateY(-5px)}}
+    @keyframes drift {50% {translate:0 -10px; rotate:6deg}}
 
-/* ---------- CARTA ---------- */
-.letter-section{
-  background:
-    radial-gradient(circle at 13% 15%,rgba(255,255,255,.96),transparent 23%),
-    radial-gradient(circle at 88% 85%,rgba(250,205,224,.38),transparent 24%),
-    linear-gradient(180deg,#fffafb 0%,#fae9f0 55%,#f1dce7 100%);
-}
-.letter{
-  position:relative;
-  z-index:2;
-  width:min(94vw,760px);
-  padding:clamp(30px,6vw,58px);
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,.9);
-  background:rgba(255,255,255,.73);
-  box-shadow:0 24px 75px rgba(103,72,89,.12);
-  line-height:1.92;
-  font-size:1.075rem;
-}
-.letter h2{
-  margin:0 0 21px;
-  font-size:clamp(1.9rem,6vw,2.7rem);
-  line-height:1.15;
-  color:#715261;
-}
-.letter p{margin:0 0 19px}
-.signature{
-  margin-top:25px;
-  font-style:italic;
-  color:#7e6673;
-}
-.divider{
-  width:90px;
-  height:1px;
-  margin:30px auto;
-  background:linear-gradient(90deg,transparent,#dab7c7,transparent);
-}
-.music{
-  text-align:center;
-  padding:20px;
-  margin:28px 0 4px;
-  border-radius:22px;
-  background:rgba(255,244,249,.72);
-  border:1px solid rgba(220,176,197,.35);
-}
-.music p{
-  margin:0 0 13px;
-  color:#806876;
-  font-size:.95rem;
-}
-.music-controls{
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:10px;
-}
-.music-note{
-  min-height:22px;
-  margin-top:10px!important;
-  font-size:.84rem!important;
-  opacity:.7;
-}
+    /* 04. CARTA — el texto está en el HTML, completo y en orden. */
+    .letter-surround {padding:28px 18px 90px; position:relative; background:linear-gradient(#fbf0f2,#fcf6f2 55%,#f6f3f5)}
+    .letter-paper {position:relative; max-width:750px; margin:auto; background:var(--paper); border:1px solid #ead9db; border-radius:7px; box-shadow:0 12px 60px #72505a08}
+    .letter-paper::before,.letter-paper::after {content:""; position:absolute; top:-11px; width:80px; height:27px; background:#e7bdca55; border:1px solid #e8c7d047; pointer-events:none}
+    .letter-paper::before {left:20px; transform:rotate(-8deg)}
+    .letter-paper::after {right:20px; transform:rotate(7deg)}
+    .chapter {padding:46px 25px 0; scroll-margin-top:84px}
+    .chapter:last-child {padding-bottom:49px}
+    .chapter-index {display:flex; align-items:center; gap:12px; margin:0 0 17px; color:#8e697a; font:10px var(--sans); letter-spacing:.16em; text-transform:uppercase}
+    .chapter-index span:first-child {font:italic 18px var(--serif); letter-spacing:0; color:#a8617c}
+    .chapter-index::after {content:""; height:1px; flex:1; background:var(--line); opacity:.7}
+    h2 {font:normal 34px/1.17 var(--serif); letter-spacing:-.035em; color:#8c4e65; margin:0 0 27px; text-wrap:balance}
+    h2 em {font-weight:normal}
+    .prose {font:17px/1.85 var(--serif); overflow-wrap:break-word}
+    .prose p {margin:0 0 22px}
+    .prose strong {font-weight:bold; color:#774454}
+    .salutation {font:italic 27px/1.4 var(--serif); color:#9c536d; margin-bottom:8px!important}
+    .greeting {font:15px/1.7 var(--sans); color:#826673; margin-bottom:27px!important}
+    .keepsake {position:relative; margin:32px -3px; padding:26px 19px; text-align:center; border-top:1px solid #eac9d6; border-bottom:1px solid #eac9d6; background:linear-gradient(110deg,#fffdf9,#fbecf1,#fffdf9)}
+    .keepsake .icon {margin:0 auto 12px; color:#b0788b; width:24px; height:29px}
+    .keepsake p {margin:0}
+    .keepsake strong {display:block; margin-top:11px; font-size:22px; font-weight:normal; line-height:1.55; color:#98536a}
+    .chapter-divider {display:flex; justify-content:center; align-items:center; gap:18px; margin:45px 25px 0; color:#c1879c}
+    .chapter-divider::before,.chapter-divider::after {content:""; background:var(--line); height:1px; width:60px}
+    .chapter-divider svg {width:44px; height:29px}
+    .wishes {padding:2px 0 2px 21px; margin:24px 0 29px; border-left:2px solid #e7c0cf}
+    .wishes p {margin:0 0 14px}
+    .wishes p:last-child {margin:0}
+    .little-moments {list-style:none; margin:23px 0 29px; padding:0}
+    .little-moments li {display:flex; align-items:center; gap:17px; padding:16px 0; border-bottom:1px solid #f0e3e6; line-height:1.65}
+    .little-moments li:last-child {border-bottom:0}
+    .moment-icon {display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; color:#ab6e85; border-radius:50%; background:#f9eaf0; transition:transform .35s}
+    .little-moments li:nth-child(2n) .moment-icon {background:#eaf2f5; color:#68899e}
+    .moment-icon .icon {width:24px; height:24px}
+    .little-moments li:hover .moment-icon {transform:rotate(-6deg)}
+    .postscript {font-style:italic; color:#7e626c}
+    .garden-edge {display:flex; justify-content:center; gap:5px; align-items:flex-end; margin:36px 0 0; color:#ac788d}
+    .garden-edge .icon {height:48px; width:35px; stroke-width:1.05}
+    .garden-edge .icon:nth-child(2) {height:62px; width:42px; color:#916a7a}
 
-/* ---------- NOCHE / DESEO ---------- */
-.night{
-  color:#fff9fc;
-  background:
-    radial-gradient(circle at 77% 16%,rgba(255,255,255,.95) 0 2.5%,rgba(255,255,255,.15) 8%,transparent 15%),
-    linear-gradient(180deg,#171829,#1f1d34 52%,#2d2943);
-}
-.night-card{
-  width:min(92vw,650px);
-  position:relative;
-  z-index:4;
-  text-align:center;
-  padding:38px 28px;
-  border-radius:30px;
-  border:1px solid rgba(255,255,255,.13);
-  background:rgba(255,255,255,.055);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  box-shadow:0 22px 80px rgba(0,0,0,.27);
-}
-.night-card h2{
-  margin:9px 0 14px;
-  color:white;
-  font-size:clamp(2rem,7vw,3.5rem);
-}
-.night-card p{
-  line-height:1.75;
-  color:rgba(255,255,255,.82);
-}
-.wish{
-  width:104px;
-  height:104px;
-  margin:26px auto 15px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  cursor:pointer;
-  user-select:none;
-  font-size:44px;
-  color:white;
-  background:radial-gradient(circle,#fff 0 7%,#ffe6f0 19%,rgba(255,255,255,.08) 55%,transparent 74%);
-  filter:drop-shadow(0 0 20px rgba(255,231,241,.72));
-  animation:pulse 2.7s ease-in-out infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.08)}
-}
-#wishText{
-  max-width:490px;
-  min-height:70px;
-  margin:0 auto;
-  opacity:0;
-  transform:translateY(9px);
-  transition:.75s ease;
-  color:#fde9f2;
-}
-#wishText.show{
-  opacity:1;
-  transform:translateY(0);
-}
-.final-line{
-  margin-top:25px;
-  font-size:.84rem;
-  opacity:.55;
-}
-.star{
-  position:absolute;
-  border-radius:50%;
-  background:white;
-  box-shadow:0 0 9px white;
-  opacity:.28;
-  animation:twinkle var(--duration) ease-in-out infinite alternate;
-}
-@keyframes twinkle{
-  to{opacity:1;transform:scale(1.75)}
-}
+    /* 05. NOCHE — el cierre se puede leer sin tocar la estrella. */
+    .night {position:relative; isolation:isolate; padding:110px 26px 110px; scroll-margin-top:0; overflow:hidden; background:radial-gradient(ellipse at 78% 5%,#73687a3b,transparent 47%),linear-gradient(#30384f,#252c44 55%,#333148); color:#ede5ec}
+    .night::before {content:""; position:absolute; top:-1px; left:0; width:100%; height:65px; background:#f6f3f5; clip-path:ellipse(65% 66% at 50% 0); z-index:-1}
+    .night-inner {max-width:610px; margin:auto; position:relative}
+    .night .eyebrow {color:#cfb4c7; text-align:center; margin:0 0 16px}
+    .night h2 {text-align:center; color:#f5e4ec; font-size:38px; margin-bottom:38px}
+    .night .prose {color:#e6e0e8}
+    .night .prose strong {color:#f4dce8}
+    .night-quote {margin:32px 0; text-align:center; padding:27px 10px; border-top:1px solid #ce9ab633; border-bottom:1px solid #ce9ab633}
+    .night-quote p {margin:0 0 17px}
+    .night-quote strong {font:italic 27px/1.5 var(--serif); display:block; text-wrap:balance}
+    .night-stars {position:absolute; inset:0; pointer-events:none; z-index:-1}
+    .night-stars span {position:absolute; height:2px; width:2px; background:#f4dfea; border-radius:50%; opacity:.25; animation:twinkle 6s ease-in-out infinite; animation-delay:var(--delay)}
+    .moon {width:36px; height:36px; position:relative; border-radius:50%; box-shadow:9px 3px 0 0 #ebd4e0; margin:0 auto 29px; transform:translateX(-5px) rotate(-20deg)}
+    .star-gift {margin:33px auto 27px; text-align:center; position:relative}
+    .star-button {position:relative; border:0; background:radial-gradient(circle,#d1acc51f,transparent 66%); color:#d8bcd2; width:116px; height:108px; display:grid; place-items:center; margin:auto; border-radius:50%; transition:color .6s,filter .6s}
+    .star-button .icon {width:48px; height:48px; stroke-width:.8; transition:transform .8s,fill .8s; fill:transparent}
+    .star-button:hover .icon {transform:rotate(12deg)}
+    .star-button[aria-pressed="true"] {color:#ffebc8; filter:drop-shadow(0 0 14px #e9b99380)}
+    .star-button[aria-pressed="true"] .icon {fill:#ffe2a747; transform:rotate(90deg)}
+    .star-caption {font:12px/1.6 var(--sans); color:#c7b6c8; margin:0; min-height:20px}
+    .closing {text-align:center; margin-top:38px}
+    .closing .birthday {font:italic 27px/1.5 var(--serif); margin:0 0 25px; color:#f4dce8}
+    .closing .from {font:12px/1.8 var(--sans); color:#cdbccc; margin:0}
+    .signature {font:italic 37px/1.5 var(--serif); color:#f1d7e5; margin:1px 0 25px}
+    .return-link {display:inline-flex; align-items:center; gap:8px; min-height:44px; text-decoration:none; color:#bfb2c8; font:11px var(--sans); padding:10px; border-bottom:1px solid #ffffff26}
+    .return-link .icon {width:16px; height:16px; transform:rotate(-90deg)}
+    .is-night .topbar {background:#252c44ed; border-bottom-color:#ffffff0c; color:#ebdce5}
+    .is-night .brand .icon {color:#dfacc5}
+    .is-night .control {background:#ffffff0a; border-color:#ffffff26}
+    .is-night .control:hover {background:#ffffff19}
+    .is-night .music-control[aria-pressed="true"] {background:#d8adca1f}
+    .is-night .reading-nav {background:#35364bed; border-color:#d1a1bc3a; color:#d2bfce}
+    .is-night .reading-nav a[aria-current="location"] {background:#d6a4c225; color:#fff0f8}
+    .is-night button:focus-visible,.is-night a:focus-visible {outline-color:#f3bad7}
+    @keyframes twinkle {50% {opacity:.65}}
 
-/* pétalos */
-.petal{
-  position:fixed;
-  z-index:50;
-  top:-25px;
-  width:10px;
-  height:15px;
-  border-radius:70% 30% 70% 30%;
-  background:rgba(255,215,231,.8);
-  pointer-events:none;
-  animation:fall var(--fall) linear forwards;
-}
-@keyframes fall{
-  to{
-    transform:translate(var(--drift),110vh) rotate(620deg);
-    opacity:.05;
-  }
-}
+    /* 06. MOVIMIENTO — breve y opcional. Nada sigue al cursor. */
+    .reveal-ready {opacity:0; transform:translateY(12px); transition:opacity .65s,transform .65s}
+    .reveal-ready.is-visible {opacity:1; transform:none}
+    .petal {position:fixed; top:14vh; left:var(--x); width:9px; height:14px; border-radius:80% 20% 70% 30%; background:#e8b4c7; pointer-events:none; z-index:70; animation:petal-fall 3.6s ease-out forwards; animation-delay:var(--delay); opacity:0}
+    @keyframes petal-fall {10% {opacity:.7} 100% {transform:translate(var(--drift),62vh) rotate(240deg); opacity:0}}
+    .star-spark {position:absolute; left:50%; top:44px; color:#ffdfb1; font-size:13px; pointer-events:none; animation:star-bloom 1.2s ease-out forwards}
+    @keyframes star-bloom {to {transform:translate(var(--dx),var(--dy)) scale(.3); opacity:0}}
+    .motion-paused *,.motion-paused *::before,.motion-paused *::after {animation:none!important; transition:none!important}
+    html.motion-paused {scroll-behavior:auto}
+    .motion-paused .reveal-ready {opacity:1; transform:none}
+    .page-hidden * {animation-play-state:paused!important}
 
-/* control de música flotante */
-.floating-music{
-  position:fixed;
-  right:16px;
-  bottom:16px;
-  z-index:80;
-  width:48px;
-  height:48px;
-  border:none;
-  border-radius:50%;
-  cursor:pointer;
-  background:rgba(255,255,255,.82);
-  color:#705160;
-  box-shadow:0 8px 25px rgba(50,30,43,.16);
-  backdrop-filter:blur(8px);
-  display:none;
-}
-
-@media(max-width:540px){
-  .glass{padding:33px 22px}
-  .letter{font-size:1.01rem}
-  .sun{width:105px;height:105px}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;scroll-behavior:auto!important}
-}
-</style>
+    /* 07. CELULAR, ESCRITORIO E IMPRESIÓN. */
+    @media (min-width:700px) {
+      .topbar {padding:10px 35px}
+      .cover {padding:110px 40px 77px}
+      .cover-paper {padding:37px 55px 37px}
+      h1 {font-size:104px}
+      .cover-greeting {font-size:19px}
+      .cover-illustration {width:445px; margin-top:1px}
+      .cover-copy {font-size:18px; max-width:365px; margin-top:-7px}
+      .cover-hint {font-size:12px}
+      .letter-surround {padding:36px 25px 110px}
+      .chapter {padding:60px 74px 0}
+      .chapter:last-child {padding-bottom:57px}
+      .prose {font-size:19px; line-height:1.9}
+      h2 {font-size:43px; margin-bottom:30px}
+      .chapter-index {font-size:11px}
+      .keepsake {margin:37px -12px; padding:31px 32px}
+      .keepsake strong {font-size:26px}
+      .chapter-divider {margin-top:52px}
+      .little-moments li {gap:23px; padding:19px 0}
+      .moment-icon {flex-basis:53px; width:53px; height:53px}
+      .night {padding-top:130px; padding-bottom:110px}
+      .night h2 {font-size:49px}
+      .night-quote strong {font-size:33px}
+      .night .prose {font-size:19px}
+    }
+    @media (max-width:360px) {
+      .cover {padding-left:16px; padding-right:16px}
+      .cover-paper {padding-left:17px; padding-right:17px}
+      h1 {font-size:67px}
+      .cover-greeting {font-size:15px}
+      .chapter {padding-left:21px; padding-right:21px}
+      .prose {font-size:16.5px}
+      h2 {font-size:31px}
+      .controls {gap:5px}
+      .control {padding:9px 10px}
+      .brand {font-size:20px}
+      .topbar {padding-left:14px; padding-right:14px}
+      .reading-nav a {font-size:10.5px}
+    }
+    @media (max-width:699px) and (max-height:700px) {
+      .cover {padding-top:87px; padding-bottom:38px}
+      .cover-paper {padding-top:28px; padding-bottom:25px}
+      h1 {font-size:61px}
+      .cover-illustration {width:min(100%,232px)}
+      .cover-copy {font-size:15.5px; line-height:1.6; margin-bottom:17px}
+    }
+    @media (prefers-reduced-motion:reduce) {
+      html {scroll-behavior:auto}
+      *,*::before,*::after {animation:none!important; transition:none!important}
+      .reveal-ready {opacity:1; transform:none}
+    }
+    @media print {
+      @page {margin:18mm}
+      body {background:#fff; color:#222}
+      .topbar,.progress,.reading-nav,.cover,.toast,.skip,.night-stars,.star-gift,.moon,.return-link,.chapter-divider,.garden-edge {display:none!important}
+      .letter-surround,.chapter,.night {padding:0; background:white; color:#222}
+      .letter-paper {border:0; box-shadow:none}
+      .letter-paper::before,.letter-paper::after,.night::before {display:none}
+      .chapter {padding-bottom:20px}
+      h2,.night h2 {font-size:24px; color:#713e54; text-align:left; margin-bottom:14px}
+      .prose,.night .prose {font:12pt/1.65 Georgia,serif; color:#222}
+      .night .prose strong,.closing .birthday,.closing .from,.signature {color:#713e54}
+      .night .eyebrow {color:#555; text-align:left}
+      .night-quote {border-color:#ddd; break-inside:avoid}
+      .reveal-ready {opacity:1!important; transform:none!important}
+    }
+  </style>
 </head>
-
 <body>
+  <!-- Dibujos pequeños hechos en SVG; no requieren descargas ni bibliotecas. -->
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="i-tulip" viewBox="0 0 24 32"><path d="M12 29V15M12 25C6 25 3 22 3 18c5 0 8 3 9 7M12 22c6 0 9-4 9-8-5 0-8 4-9 8"/><path d="M4 4c4 0 5 3 5 3l3-5 3 5s2-3 5-3l-1 8c-1 7-13 7-14 0Z" fill="currentColor" fill-opacity=".13"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="5.8" cy="18" rx="3.2" ry="2.4"/><ellipse cx="16.8" cy="16" rx="3.2" ry="2.4"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="2.6"/></symbol>
+      <symbol id="i-motion" viewBox="0 0 24 24"><path d="M4 7c4-5 7 5 11 0s7 1 5 3M3 13c5-5 8 6 12 0M4 19c3-4 5 1 8 0"/></symbol>
+      <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 1 2.8 8.2L23 12l-8.2 2.8L12 23l-2.8-8.2L1 12l8.2-2.8Z"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21C8 18 2 14 2 8a5 5 0 0 1 10-1A5 5 0 0 1 22 8c0 6-6 10-10 13Z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><path d="M2 17h20M4 21h16M6 17a6 6 0 0 1 12 0M12 2v4M4 7l2.5 2.5M20 7l-2.5 2.5"/></symbol>
+      <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4 21C4 12 12 11 20 3M5 17C1 6 10 2 21 2c0 11-3 19-14 16M11 11v-5M11 11h6"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11a9 8 0 0 1-13 7l-5 3 1-6a9 8 0 1 1 17-4Z"/><path d="M8 12c2 3 6 3 8 0M8 8h.01M16 8h.01"/></symbol>
+      <symbol id="i-bow" viewBox="0 0 86 52"><g stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M40 24C18-1 5 7 8 24s18 10 32 3M46 24C67-1 81 7 78 24S59 34 46 27" fill="#efc8d6"/><path d="M40 26 20 48l15-4 5 5 4-22M46 26l19 22-13-4-5 5-5-22" fill="#efc8d6"/><path d="m15 19 23 6M70 19 48 25" fill="none" opacity=".6"/><rect x="37" y="19" width="13" height="13" rx="5" fill="#f7dee6"/></g></symbol>
+    </defs>
+  </svg>
 
-<audio id="bgMusic" loop preload="metadata">
-  <source src="musica.mp3" type="audio/mpeg">
-</audio>
-
-<button id="floatingMusic" class="floating-music" onclick="toggleMusic()" aria-label="Pausar o reproducir música">♫</button>
-
-<section class="screen hero" id="inicio">
-  <div class="sun"></div>
-  <div class="mountain m1"></div>
-  <div class="mountain m2"></div>
-  <div class="mountain m3"></div>
-  <div class="forest"></div>
-
-  <div class="glass">
-    <div class="small">1 de octubre ✦ un pequeño detalle</div>
-    <h1>Hola, July ✨</h1>
-
-    <p class="hero-text">
-      Hay un pequeño rincón en Internet que quería regalarte.
-      No es algo enorme, solo un momento tranquilo hecho con cariño,
-      para que lo disfrutes a tu manera.
-    </p>
-
-    <button class="btn" onclick="openLetter()">Abrir la cartita 🌸</button>
-  </div>
-</section>
-
-<section class="screen letter-section" id="carta">
-  <article class="letter">
-    <div class="small">para ti, en tu día</div>
-    <h2>Feliz cumpleaños, July 🤍</h2>
-
-    <p>
-      Quise hacerte algo sencillo y bonito. Algo que se sintiera un poco como
-      un amanecer tranquilo: sin ruido, sin prisa y sin tener que significar
-      más de lo que tú quieras que signifique.
-    </p>
-
-    <p>
-      Espero que este nuevo año de vida te regale momentos en los que puedas
-      respirar en paz, lugares que te hagan sentir cómoda, personas que te hagan
-      bien y días que, aunque parezcan normales, terminen convirtiéndose en
-      recuerdos bonitos.
-    </p>
-
-    <p>
-      También deseo que nunca te falten esos pequeños refugios que uno encuentra
-      en cosas simples: un cielo bonito, un bosque silencioso, una tarde tranquila,
-      una canción que llega justo en el momento correcto o un amanecer que hace
-      sentir que siempre es posible comenzar otra vez.
-    </p>
-
-    <p>
-      Quería regalarte este detalle sin pedirle nada a cambio.
-      No necesitas responder de una manera especial, ni darle un significado
-      distinto al que quieras darle. Solo quería que por unos minutos existiera
-      algo hecho pensando en que pudieras sonreír, relajarte y disfrutarlo.
-    </p>
-
-    <p>
-      Porque a veces querer a alguien también puede ser algo tranquilo:
-      alegrarse por su existencia, desearle cosas bonitas y dejarle espacio
-      para ser ella misma.
-    </p>
-
-    <p class="signature">
-      Y si esta pequeña cartita consigue acompañarte aunque sea un ratito,
-      entonces ya habrá cumplido perfectamente su propósito. 🌷
-    </p>
-
-    <div class="divider"></div>
-
-    <div class="music">
-      <p>Esta canción puede acompañar el resto del detallito ♫</p>
-      <div class="music-controls">
-        <button class="btn" onclick="toggleMusic()">♫ Reproducir / pausar</button>
+  <a href="#carta" class="skip">Ir a la carta</a>
+  <div class="progress" aria-hidden="true"><span id="progressLine"></span></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#inicio" aria-label="Para July, volver a la portada"><svg class="icon" aria-hidden="true"><use href="#i-tulip"/></svg>Para July</a>
+      <div class="controls">
+        <button class="control motion-control" id="motionButton" type="button" aria-label="Pausar animaciones" aria-pressed="false" title="Pausar animaciones" hidden><svg class="icon" aria-hidden="true"><use href="#i-motion"/></svg></button>
+        <button class="control music-control" id="musicButton" type="button" aria-label="Reproducir música" aria-pressed="false" hidden>
+          <svg class="icon play-icon" aria-hidden="true"><use href="#i-music"/></svg><svg class="icon pause-icon" aria-hidden="true"><use href="#i-pause"/></svg><span id="musicLabel">Música</span>
+        </button>
       </div>
-      <p id="musicStatus" class="music-note"></p>
+    </div>
+  </header>
+  <div class="toast" id="audioStatus" role="status" hidden></div>
+  <audio id="music" loop preload="none"></audio>
+
+  <main>
+    <section class="cover" id="inicio" aria-labelledby="coverTitle">
+      <span class="floating-mark mark-one" aria-hidden="true">✧</span><span class="floating-mark mark-two" aria-hidden="true">✧</span><span class="floating-mark mark-three" aria-hidden="true">✦</span>
+      <div class="cover-paper">
+        <svg class="ribbon" aria-hidden="true"><use href="#i-bow"/></svg>
+        <p class="cover-date">1 de octubre</p>
+        <h1 id="coverTitle">Julyyy</h1>
+        <p class="cover-greeting">Feliz cumpleañosss <span class="inline-emoji heart"><span class="visually-hidden">🤍</span><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></span></p>
+        <img class="cover-illustration" src="imagenes/july-personajes.png" width="1536" height="1024" alt="Cinnamoroll, Hello Kitty y My Melody juntos con un ramo de tulipanes rosas y blancos." fetchpriority="high" decoding="async">
+        <p class="cover-copy">Unas palabras para celebrar<br>a la persona que eres.</p>
+        <a class="primary-link" id="openLetter" href="#carta">Abrir la cartita <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <p class="cover-hint" id="coverHint">Un pequeño regalo, con mucho cariño.</p>
+      </div>
+    </section>
+
+    <div class="letter-surround">
+      <article class="letter-paper" aria-label="Carta de Robert para July">
+        <!-- CARTA, PARTE 1: saludo y el año que pasó. -->
+        <section class="chapter" id="carta" aria-labelledby="historyTitle">
+          <p class="chapter-index"><span>01</span><span>Tu historia</span></p>
+          <h2 id="historyTitle" tabindex="-1">Todo lo que te trajo<br><em>hasta aquí.</em></h2>
+          <div class="prose letter-text">
+            <p class="salutation">Julyyy <span class="inline-emoji"><span class="visually-hidden">🌷</span><svg class="icon" aria-hidden="true"><use href="#i-tulip"/></svg></span></p>
+            <p class="greeting">Feliz cumpleañosss <span class="inline-emoji heart"><span class="visually-hidden">🤍</span><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></span></p>
+            <p>Hoy quería dejarte unas palabras porque, entre tantas cosas que uno puede regalar en un cumpleaños, también me parece bonito recordarle a alguien un poquito de lo que uno ve en esa persona.</p>
+            <p>Ha pasado otro año de tu vida. Seguramente estuvo lleno de momentos muy distintos entre sí: cosas que disfrutaste, otras que te costaron, personas, aprendizajes, cambios, días que recordarás bastante y otros que quizá ya olvidaste.</p>
+            <p><strong>Pero todos ellos te trajeron hasta aquí.</strong></p>
+            <p>Y espero que, cuando pienses en este último año, no mires solamente aquello que todavía te falta. También reconoce todo lo que has aprendido, las veces que seguiste intentando y todas esas pequeñas formas en las que has ido creciendo aunque quizá no siempre las notes.</p>
+          </div>
+        </section>
+
+        <div class="chapter-divider" aria-hidden="true"><svg><use href="#i-bow"/></svg></div>
+
+        <!-- CARTA, PARTE 2: lo que ves en ella y el cariño que también merece. -->
+        <section class="chapter" id="carino" aria-labelledby="careTitle">
+          <p class="chapter-index"><span>02</span><span>También para ti</span></p>
+          <h2 id="careTitle" tabindex="-1">Un poquito de<br><em>esa misma ternura.</em></h2>
+          <div class="prose letter-text">
+            <p>Hay muchas cosas de ti que me parecen bonitas, July. La forma en la que puedes llegar a querer a las personas, cómo intentas estar para quienes son importantes para ti, tus ocurrencias, las cosas que te emocionan y esa sensibilidad que tienes para notar lo que otros sienten.</p>
+            <div class="keepsake">
+              <svg class="icon" aria-hidden="true"><use href="#i-tulip"/></svg>
+              <p>Pero entre todo eso, espero que este nuevo año también te recuerde algo importante: <strong>que tú también mereces recibir parte de todo ese cariño que das.</strong></p>
+            </div>
+            <p>Que puedas cuidar tu corazón con la misma ternura con la que muchas veces intentas cuidar el de los demás.</p>
+            <p>Que puedas reconocerte, escucharte y tratarte con más cariño en esos momentos en los que quizá te cueste hacerlo.</p>
+          </div>
+        </section>
+
+        <div class="chapter-divider" aria-hidden="true"><svg><use href="#i-bow"/></svg></div>
+
+        <!-- CARTA, PARTE 3: todos los deseos y los cinco momentos pequeños. -->
+        <section class="chapter" id="momentos" aria-labelledby="momentsTitle">
+          <p class="chapter-index"><span>03</span><span>Lo bonito de lo pequeño</span></p>
+          <h2 id="momentsTitle" tabindex="-1">Cosas que se guardan<br><em>con cariño.</em></h2>
+          <div class="prose letter-text">
+            <p>Y espero que este nuevo año tenga muchas cosas bonitas guardadas para ti.</p>
+            <div class="wishes">
+              <p>Que aparezcan personas con las que puedas sentirte tú misma.</p>
+              <p>Que tengas motivos para sentirte orgullosa de ti.</p>
+              <p>Que algunos de esos sueños que guardas empiecen poquito a poquito a tomar forma.</p>
+            </div>
+            <p>Y que entre todo eso también haya muchos momentos pequeños.</p>
+            <ul class="little-moments">
+              <li><span class="moment-icon" aria-hidden="true"><svg class="icon"><use href="#i-sun"/></svg></span><span>Algún amanecer especialmente bonito.</span></li>
+              <li><span class="moment-icon" aria-hidden="true"><svg class="icon"><use href="#i-music"/></svg></span><span>Una canción que termines escuchando una y otra vez.</span></li>
+              <li><span class="moment-icon" aria-hidden="true"><svg class="icon"><use href="#i-leaf"/></svg></span><span>Un lugar al que quieras volver.</span></li>
+              <li><span class="moment-icon" aria-hidden="true"><svg class="icon"><use href="#i-chat"/></svg></span><span>Una conversación que te haga reír muchísimo.</span></li>
+              <li><span class="moment-icon" aria-hidden="true"><svg class="icon"><use href="#i-star"/></svg></span><span>Un cielo que te haga detenerte unos segundos solamente para mirarlo.</span></li>
+            </ul>
+            <p class="postscript">Creo que muchas veces son esas cosas las que terminamos guardando con más cariño.</p>
+          </div>
+          <div class="garden-edge" aria-hidden="true"><svg class="icon"><use href="#i-tulip"/></svg><svg class="icon"><use href="#i-tulip"/></svg><svg class="icon"><use href="#i-tulip"/></svg></div>
+        </section>
+      </article>
     </div>
 
-    <div style="text-align:center;margin-top:26px">
-      <a class="btn" href="#deseo">Hay una última cosita ✨</a>
-    </div>
-  </article>
-</section>
+    <!-- CARTA, PARTE 4: cierre completo; la estrella es un detalle independiente. -->
+    <section class="night" id="deseo" aria-labelledby="wishTitle">
+      <div class="night-stars" id="nightStars" aria-hidden="true"></div>
+      <div class="night-inner">
+        <div class="moon" aria-hidden="true"></div>
+        <p class="eyebrow">04 · Un deseo para este año</p>
+        <h2 id="wishTitle" tabindex="-1">Que sigas descubriendo<br><em>quién eres.</em></h2>
+        <div class="prose letter-text">
+          <p>Me alegra haber podido conocerte y descubrir algunas de esas pequeñas cosas que te hacen ser July.</p>
+          <p>Espero que este nuevo año puedas conocerte tú también un poquito más: descubrir qué te hace bien, qué quieres conservar, qué cosas nuevas quieres intentar y qué clase de vida quieres ir construyendo para ti.</p>
+          <p>Hoy disfruta tu día. Come algo ricooo, ríete bastante, recibe todo el cariño que tengan para darte y guarda algún recuerdo bonito de este cumpleaños. <span class="inline-emoji"><span class="visually-hidden">🌷</span><svg class="icon" aria-hidden="true"><use href="#i-tulip"/></svg></span></p>
+          <div class="night-quote">
+            <p>Y cuando vuelva a llegar el 1 de octubre, espero que puedas mirar hacia atrás y pensar:</p>
+            <strong>“Este año también aprendí un poquito más de mí.”</strong>
+          </div>
+        </div>
+        <div class="star-gift" id="starGift" hidden>
+          <button class="star-button" id="wishButton" type="button" aria-label="Encender una estrellita" aria-pressed="false" aria-describedby="starCaption"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+          <p class="star-caption" id="starCaption" role="status">Toca para encender una estrellita.</p>
+        </div>
+        <div class="closing letter-text">
+          <p class="birthday">Feliz cumpleaños, July. <span class="inline-emoji heart"><span class="visually-hidden">🤍</span><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg></span></p>
+          <p class="from">Con mucho cariño,</p>
+          <p class="signature">Robert</p>
+        </div>
+        <div style="text-align:center"><a class="return-link" href="#inicio"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>Volver al inicio</a></div>
+      </div>
+    </section>
+  </main>
 
-<section class="screen night" id="deseo">
-  <div class="night-card">
-    <div class="small" style="color:#e9dce4">antes de irte</div>
-    <h2>Pide un deseo 🌙</h2>
+  <nav class="reading-nav" id="readingNav" aria-label="Secciones de la carta" hidden>
+    <a href="#carta">Tu historia</a><a href="#carino">Para ti</a><a href="#momentos">Momentos</a><a href="#deseo">Un deseo</a>
+  </nav>
 
-    <p>
-      No tienes que contárselo a nadie.
-      Solo piensa en algo bonito que quieras para ti y,
-      cuando estés lista, toca la estrella.
-    </p>
-
-    <div class="wish" onclick="makeWish()" role="button" tabindex="0" aria-label="Pedir un deseo">✦</div>
-
-    <div id="wishText">
-      Ojalá este nuevo año de tu vida esté lleno de momentos que se sientan
-      como un amanecer después de una noche larga: suaves, llenos de luz
-      y llegando a su propio tiempo. Feliz cumpleaños, July. 🤍
-    </div>
-
-    <div class="final-line">
-      Hecho con cariño, sin prisa y sin expectativas ✦
-    </div>
-  </div>
-</section>
-
-<script>
-const music = document.getElementById("bgMusic");
-const floatingMusic = document.getElementById("floatingMusic");
-const musicStatus = document.getElementById("musicStatus");
-let wishMade = false;
-
-function openLetter(){
-  document.getElementById("carta").scrollIntoView({behavior:"smooth"});
-  petals();
-
-  music.volume = 0.28;
-  music.play()
-    .then(()=>{
-      floatingMusic.style.display="block";
-      musicStatus.textContent="♫ Música sonando suavemente";
-    })
-    .catch(()=>{
-      musicStatus.textContent="Si quieres música, toca «Reproducir / pausar» ♫";
+  <script>
+  (() => {
+    'use strict';
+    /* CONFIGURACIÓN: coloca musica.mp3 junto a index.html.
+       Para quitar la música y su botón, cambia musicSrc a ''.
+       La música NUNCA se reproduce sola: July decide si quiere escucharla. */
+    const CONFIG = { musicSrc: 'musica.mp3', musicVolume: 0.22 };
+    const root = document.documentElement;
+    const body = document.body;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motionButton = document.getElementById('motionButton');
+    let manualPause = false;
+    try { manualPause = sessionStorage.getItem('july-motion-paused') === 'true'; } catch (_) {}
+    const motionOff = () => reducedMotion.matches || manualPause;
+    function applyMotionPreference() {
+      root.classList.toggle('motion-paused', motionOff());
+      motionButton.setAttribute('aria-pressed', String(motionOff()));
+      motionButton.setAttribute('aria-label', motionOff() ? 'Animaciones en pausa' : 'Pausar animaciones');
+      motionButton.title = reducedMotion.matches ? 'Movimiento reducido del dispositivo' : manualPause ? 'Reanudar animaciones' : 'Pausar animaciones';
+      if (manualPause && !reducedMotion.matches) motionButton.setAttribute('aria-label', 'Reanudar animaciones');
+      if (motionOff()) document.querySelectorAll('.petal,.star-spark').forEach(el => el.remove());
+    }
+    motionButton.addEventListener('click', () => {
+      if (reducedMotion.matches) {
+        announce('Las animaciones están en pausa por la configuración de tu dispositivo.');
+        return;
+      }
+      manualPause = !manualPause;
+      try { sessionStorage.setItem('july-motion-paused', String(manualPause)); } catch (_) {}
+      applyMotionPreference();
     });
-}
+    if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', applyMotionPreference);
+    else if (reducedMotion.addListener) reducedMotion.addListener(applyMotionPreference);
+    applyMotionPreference();
+    motionButton.hidden = false;
 
-function toggleMusic(){
-  if(music.paused){
-    music.volume = 0.28;
-    music.play()
-      .then(()=>{
-        floatingMusic.style.display="block";
-        musicStatus.textContent="♫ Música sonando suavemente";
-      })
-      .catch(()=>{
-        musicStatus.textContent="No encontré «musica.mp3». Revisa que esté junto al index.html.";
+    // Música: carga diferida, estado real del audio y errores comprensibles.
+    const music = document.getElementById('music');
+    const musicButton = document.getElementById('musicButton');
+    const musicLabel = document.getElementById('musicLabel');
+    const audioStatus = document.getElementById('audioStatus');
+    let toastTimer;
+    let musicPending = false;
+    let musicTimeout;
+    let audioAttempt = 0;
+    function announce(message) {
+      clearTimeout(toastTimer);
+      audioStatus.textContent = message;
+      audioStatus.hidden = false;
+      toastTimer = setTimeout(() => { audioStatus.hidden = true; }, 6000);
+    }
+    function syncAudio() {
+      const playing = !music.paused && !music.ended;
+      musicButton.setAttribute('aria-pressed', String(playing));
+      musicButton.setAttribute('aria-label', playing ? 'Pausar música' : 'Reproducir música');
+      musicLabel.textContent = playing ? 'Pausar' : 'Música';
+    }
+    function finishAudioAttempt() {
+      clearTimeout(musicTimeout);
+      musicPending = false;
+      musicButton.removeAttribute('aria-busy');
+      syncAudio();
+    }
+    music.volume = CONFIG.musicVolume;
+    music.addEventListener('playing', () => { finishAudioAttempt(); audioStatus.hidden = true; });
+    music.addEventListener('pause', syncAudio);
+    music.addEventListener('ended', syncAudio);
+    if (CONFIG.musicSrc) {
+      musicButton.hidden = false;
+      document.getElementById('coverHint').textContent = 'A tu ritmo, con música si te apetece.';
+    }
+    musicButton.addEventListener('click', async () => {
+      if (musicPending || !music.paused) {
+        audioAttempt++;
+        music.pause();
+        finishAudioAttempt();
+        return;
+      }
+      const attempt = ++audioAttempt;
+      musicPending = true;
+      musicButton.setAttribute('aria-busy', 'true');
+      musicLabel.textContent = 'Cargando…';
+      if (!music.getAttribute('src')) music.src = CONFIG.musicSrc;
+      else if (music.error) music.load();
+      musicTimeout = setTimeout(() => {
+        if (attempt !== audioAttempt || !musicPending) return;
+        audioAttempt++;
+        music.pause();
+        finishAudioAttempt();
+        announce('La música tarda en cargar. Puedes volver a intentarlo o seguir leyendo en silencio.');
+      }, 15000);
+      try {
+        await music.play();
+        if (attempt === audioAttempt) finishAudioAttempt();
+      } catch (error) {
+        if (attempt !== audioAttempt) return;
+        finishAudioAttempt();
+        if (error.name !== 'AbortError') announce('La música no pudo cargarse. Puedes seguir leyendo en silencio.');
+      }
+    });
+    // Al salir de la pestaña se pausa. Al volver, la persona decide reanudar.
+    document.addEventListener('visibilitychange', () => {
+      body.classList.toggle('page-hidden', document.hidden);
+      if (document.hidden) {
+        audioAttempt++;
+        music.pause();
+        finishAudioAttempt();
+      }
+    });
+    window.addEventListener('pagehide', () => music.pause());
+
+    // Navegación por anclas, con foco accesible y desplazamiento natural.
+    const chapters = ['carta','carino','momentos','deseo'].map(id => document.getElementById(id));
+    const navLinks = [...document.querySelectorAll('.reading-nav a')];
+    const progress = document.getElementById('progressLine');
+    let scrollScheduled = false;
+    function updateReadingState() {
+      scrollScheduled = false;
+      const y = window.scrollY;
+      const max = Math.max(1, root.scrollHeight - window.innerHeight);
+      progress.style.transform = `scaleX(${Math.max(0, Math.min(1, y / max))})`;
+      const positions = chapters.map(el => el.getBoundingClientRect().top);
+      body.classList.toggle('is-reading', positions[0] < window.innerHeight * 0.65);
+      body.classList.toggle('is-night', positions[3] < 90);
+      let active = 0;
+      positions.forEach((top, i) => { if (top < window.innerHeight * 0.32) active = i; });
+      navLinks.forEach((link, i) => {
+        if (i === active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
       });
-  }else{
-    music.pause();
-    musicStatus.textContent="Música en pausa ♫";
-  }
-}
-
-function petals(){
-  for(let i=0;i<24;i++){
-    setTimeout(()=>{
-      const p=document.createElement("div");
-      p.className="petal";
-      p.style.left=Math.random()*100+"vw";
-      p.style.setProperty("--drift",(-100+Math.random()*200)+"px");
-      p.style.setProperty("--fall",(5+Math.random()*4)+"s");
-      document.body.appendChild(p);
-      setTimeout(()=>p.remove(),9500);
-    },i*90);
-  }
-}
-
-/* estrellas de la noche */
-const night=document.querySelector(".night");
-for(let i=0;i<85;i++){
-  const s=document.createElement("span");
-  s.className="star";
-  const size=1+Math.random()*2.5;
-  s.style.width=size+"px";
-  s.style.height=size+"px";
-  s.style.left=Math.random()*100+"%";
-  s.style.top=Math.random()*100+"%";
-  s.style.setProperty("--duration",(1.5+Math.random()*3.8)+"s");
-  night.appendChild(s);
-}
-
-function makeWish(){
-  if(wishMade) return;
-  wishMade=true;
-
-  document.getElementById("wishText").classList.add("show");
-
-  for(let i=0;i<28;i++){
-    const spark=document.createElement("div");
-    spark.textContent="✦";
-    spark.style.position="fixed";
-    spark.style.left=(46+Math.random()*8)+"vw";
-    spark.style.top=(45+Math.random()*8)+"vh";
-    spark.style.zIndex="100";
-    spark.style.color="white";
-    spark.style.pointerEvents="none";
-    spark.style.fontSize=(9+Math.random()*18)+"px";
-    spark.style.transition="all 1.35s ease-out";
-    document.body.appendChild(spark);
-
-    requestAnimationFrame(()=>{
-      spark.style.transform=
-        `translate(${(-210+Math.random()*420)}px,${(-210+Math.random()*280)}px) scale(.2)`;
-      spark.style.opacity="0";
+    }
+    function scheduleReadingState() {
+      if (!scrollScheduled) { scrollScheduled = true; requestAnimationFrame(updateReadingState); }
+    }
+    window.addEventListener('scroll', scheduleReadingState, { passive: true });
+    window.addEventListener('resize', scheduleReadingState, { passive: true });
+    window.addEventListener('load', updateReadingState);
+    document.getElementById('readingNav').hidden = false;
+    updateReadingState();
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', event => {
+        const hash = link.getAttribute('href');
+        const target = document.querySelector(hash);
+        if (!target) return;
+        event.preventDefault();
+        try { if (location.hash !== hash) history.pushState(null, '', hash); }
+        catch (_) { location.hash = hash; }
+        target.querySelectorAll('.reveal-ready').forEach(el => el.classList.add('is-visible'));
+        const heading = target.querySelector('h1,h2');
+        if (heading) {
+          heading.setAttribute('tabindex','-1');
+          heading.focus({ preventScroll:true });
+        }
+        target.scrollIntoView({ behavior:motionOff() ? 'instant' : 'smooth', block:'start' });
+      });
     });
 
-    setTimeout(()=>spark.remove(),1450);
-  }
-}
+    // Una breve apertura con pétalos; no se repite durante la lectura.
+    let opened = false;
+    document.getElementById('openLetter').addEventListener('click', () => {
+      if (opened) return;
+      opened = true;
+      if (motionOff()) return;
+      for (let i = 0; i < 9; i++) {
+        const petal = document.createElement('span');
+        petal.className = 'petal';
+        petal.setAttribute('aria-hidden','true');
+        petal.style.setProperty('--x', `${14 + i * 9}%`);
+        petal.style.setProperty('--delay', `${i * .07}s`);
+        petal.style.setProperty('--drift', `${(i % 2 ? -1 : 1) * (25 + i * 4)}px`);
+        body.appendChild(petal);
+        setTimeout(() => petal.remove(), 4500);
+      }
+    });
 
-document.querySelector(".wish").addEventListener("keydown",(e)=>{
-  if(e.key==="Enter" || e.key===" "){
-    e.preventDefault();
-    makeWish();
-  }
-});
-</script>
+    // Aparición suave por párrafos, con contenido visible si JavaScript no funciona.
+    if ('IntersectionObserver' in window && !motionOff()) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold:0, rootMargin:'0px 0px -15px 0px' });
+      document.querySelectorAll('.prose > p,.keepsake,.wishes,.little-moments,.night-quote').forEach(el => {
+        if (el.getBoundingClientRect().top > window.innerHeight) {
+          el.classList.add('reveal-ready');
+          observer.observe(el);
+        }
+      });
+    }
 
+    // Estrellas discretas, en posiciones fijas para evitar saltos entre visitas.
+    const stars = document.getElementById('nightStars');
+    for (let i = 0; i < 30; i++) {
+      const star = document.createElement('span');
+      star.style.left = `${(i * 37 + 11) % 99}%`;
+      star.style.top = `${(i * 23 + 3) % 97}%`;
+      star.style.setProperty('--delay', `${-(i % 7)}s`);
+      stars.appendChild(star);
+    }
+    const wishButton = document.getElementById('wishButton');
+    document.getElementById('starGift').hidden = false;
+    wishButton.addEventListener('click', () => {
+      if (wishButton.getAttribute('aria-pressed') === 'true') return;
+      wishButton.setAttribute('aria-pressed', 'true');
+      wishButton.setAttribute('aria-label', 'Tu estrellita está encendida');
+      document.getElementById('starCaption').textContent = 'Una estrellita para tu nuevo año. ✧';
+      if (motionOff()) return;
+      for (let i = 0; i < 8; i++) {
+        const spark = document.createElement('span');
+        spark.className = 'star-spark';
+        spark.setAttribute('aria-hidden','true');
+        spark.textContent = '✧';
+        const angle = i * Math.PI / 4;
+        spark.style.setProperty('--dx', `${Math.cos(angle) * 75}px`);
+        spark.style.setProperty('--dy', `${Math.sin(angle) * 58}px`);
+        document.getElementById('starGift').appendChild(spark);
+        setTimeout(() => spark.remove(), 1300);
+      }
+    });
+  })();
+  </script>
 </body>
 </html>
