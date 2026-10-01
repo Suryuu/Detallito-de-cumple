@@ -168,11 +168,11 @@
     .is-night button:focus-visible,.is-night a:focus-visible {outline-color:#f3bad7}
     @keyframes twinkle {50% {opacity:.65}}
 
-    /* 06. MOVIMIENTO — breve y opcional. Nada sigue al cursor. */
+    /* 06. MOVIMIENTO — sakuras suaves, sin interceptar toques ni clics. */
     .reveal-ready {opacity:0; transform:translateY(12px); transition:opacity .65s,transform .65s}
     .reveal-ready.is-visible {opacity:1; transform:none}
-    .petal {position:fixed; top:14vh; left:var(--x); width:9px; height:14px; border-radius:80% 20% 70% 30%; background:#e8b4c7; pointer-events:none; z-index:70; animation:petal-fall 3.6s ease-out forwards; animation-delay:var(--delay); opacity:0}
-    @keyframes petal-fall {10% {opacity:.7} 100% {transform:translate(var(--drift),62vh) rotate(240deg); opacity:0}}
+    #sakuraCanvas {position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:44; contain:strict}
+    .motion-paused #sakuraCanvas {visibility:hidden}
     .star-spark {position:absolute; left:50%; top:44px; color:#ffdfb1; font-size:13px; pointer-events:none; animation:star-bloom 1.2s ease-out forwards}
     @keyframes star-bloom {to {transform:translate(var(--dx),var(--dy)) scale(.3); opacity:0}}
     .motion-paused *,.motion-paused *::before,.motion-paused *::after {animation:none!important; transition:none!important}
@@ -235,7 +235,7 @@
     @media print {
       @page {margin:18mm}
       body {background:#fff; color:#222}
-      .topbar,.progress,.reading-nav,.cover,.toast,.skip,.night-stars,.star-gift,.moon,.return-link,.chapter-divider,.garden-edge {display:none!important}
+      .topbar,.progress,.reading-nav,.cover,.toast,.skip,.night-stars,.star-gift,.moon,.return-link,.chapter-divider,.garden-edge,#sakuraCanvas {display:none!important}
       .letter-surround,.chapter,.night {padding:0; background:white; color:#222}
       .letter-paper {border:0; box-shadow:none}
       .letter-paper::before,.letter-paper::after,.night::before {display:none}
@@ -250,6 +250,7 @@
   </style>
 </head>
 <body>
+  <canvas id="sakuraCanvas" aria-hidden="true"></canvas>
   <!-- Dibujos pequeños hechos en SVG; no requieren descargas ni bibliotecas. -->
   <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
@@ -398,25 +399,30 @@
     'use strict';
     /* CONFIGURACIÓN: coloca musica.mp3 junto a index.html.
        Para quitar la música y su botón, cambia musicSrc a ''.
-       La música NUNCA se reproduce sola: July decide si quiere escucharla. */
-    const CONFIG = { musicSrc: 'musica.mp3', musicVolume: 0.22 };
+       Intenta empezar al entrar; si el navegador lo bloquea, espera el primer toque.
+       Una pausa voluntaria se conserva durante esta sesión. */
+    const CONFIG = { musicSrc: 'musica.mp3', musicVolume: 0.22, autoplayMusic: true };
     const root = document.documentElement;
     const body = document.body;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let systemMotionReduced = reducedMotion.matches;
     const motionButton = document.getElementById('motionButton');
+    let refreshSakura = () => {};
     let manualPause = false;
     try { manualPause = sessionStorage.getItem('july-motion-paused') === 'true'; } catch (_) {}
-    const motionOff = () => reducedMotion.matches || manualPause;
-    function applyMotionPreference() {
+    const motionOff = () => systemMotionReduced || manualPause;
+    function applyMotionPreference(event) {
+      if (event && typeof event.matches === 'boolean') systemMotionReduced = event.matches;
       root.classList.toggle('motion-paused', motionOff());
       motionButton.setAttribute('aria-pressed', String(motionOff()));
       motionButton.setAttribute('aria-label', motionOff() ? 'Animaciones en pausa' : 'Pausar animaciones');
-      motionButton.title = reducedMotion.matches ? 'Movimiento reducido del dispositivo' : manualPause ? 'Reanudar animaciones' : 'Pausar animaciones';
-      if (manualPause && !reducedMotion.matches) motionButton.setAttribute('aria-label', 'Reanudar animaciones');
-      if (motionOff()) document.querySelectorAll('.petal,.star-spark').forEach(el => el.remove());
+      motionButton.title = systemMotionReduced ? 'Movimiento reducido del dispositivo' : manualPause ? 'Reanudar animaciones' : 'Pausar animaciones';
+      if (manualPause && !systemMotionReduced) motionButton.setAttribute('aria-label', 'Reanudar animaciones');
+      if (motionOff()) document.querySelectorAll('.star-spark').forEach(el => el.remove());
+      refreshSakura();
     }
     motionButton.addEventListener('click', () => {
-      if (reducedMotion.matches) {
+      if (systemMotionReduced) {
         announce('Las animaciones están en pausa por la configuración de tu dispositivo.');
         return;
       }
@@ -429,7 +435,7 @@
     applyMotionPreference();
     motionButton.hidden = false;
 
-    // Música: carga diferida, estado real del audio y errores comprensibles.
+    // Música: intento automático, primer gesto real y pausa que se respeta.
     const music = document.getElementById('music');
     const musicButton = document.getElementById('musicButton');
     const musicLabel = document.getElementById('musicLabel');
@@ -438,6 +444,12 @@
     let musicPending = false;
     let musicTimeout;
     let audioAttempt = 0;
+    let userPausedMusic = false;
+    try { userPausedMusic = sessionStorage.getItem('july-music-paused') === 'true'; } catch (_) {}
+    let musicDesired = CONFIG.autoplayMusic && !userPausedMusic;
+    let unlockOnGesture = musicDesired;
+    let hasPlayed = false;
+    let resumeOnReturn = false;
     function announce(message) {
       clearTimeout(toastTimer);
       audioStatus.textContent = message;
@@ -457,20 +469,22 @@
       syncAudio();
     }
     music.volume = CONFIG.musicVolume;
-    music.addEventListener('playing', () => { finishAudioAttempt(); audioStatus.hidden = true; });
+    music.addEventListener('playing', () => {
+      if (!musicDesired || document.hidden) { music.pause(); return; }
+      hasPlayed = true;
+      unlockOnGesture = false;
+      finishAudioAttempt();
+      audioStatus.hidden = true;
+    });
     music.addEventListener('pause', syncAudio);
     music.addEventListener('ended', syncAudio);
     if (CONFIG.musicSrc) {
       musicButton.hidden = false;
-      document.getElementById('coverHint').textContent = 'A tu ritmo, con música si te apetece.';
+      document.getElementById('coverHint').textContent = 'Una canción y una lluvia de flores para acompañarte.';
     }
-    musicButton.addEventListener('click', async () => {
-      if (musicPending || !music.paused) {
-        audioAttempt++;
-        music.pause();
-        finishAudioAttempt();
-        return;
-      }
+    async function startMusic() {
+      if (!CONFIG.musicSrc || !musicDesired || musicPending || !music.paused || document.hidden) return;
+      unlockOnGesture = false;
       const attempt = ++audioAttempt;
       musicPending = true;
       musicButton.setAttribute('aria-busy', 'true');
@@ -480,6 +494,7 @@
       musicTimeout = setTimeout(() => {
         if (attempt !== audioAttempt || !musicPending) return;
         audioAttempt++;
+        unlockOnGesture = false;
         music.pause();
         finishAudioAttempt();
         announce('La música tarda en cargar. Puedes volver a intentarlo o seguir leyendo en silencio.');
@@ -490,19 +505,61 @@
       } catch (error) {
         if (attempt !== audioAttempt) return;
         finishAudioAttempt();
-        if (error.name !== 'AbortError') announce('La música no pudo cargarse. Puedes seguir leyendo en silencio.');
+        if (error.name === 'NotAllowedError') {
+          // No se intenta eludir la política del navegador: se espera un gesto.
+          unlockOnGesture = musicDesired;
+        } else if (error.name !== 'AbortError') {
+          unlockOnGesture = false;
+          announce('La música no pudo cargarse. Puedes seguir leyendo en silencio.');
+        }
       }
-    });
-    // Al salir de la pestaña se pausa. Al volver, la persona decide reanudar.
-    document.addEventListener('visibilitychange', () => {
-      body.classList.toggle('page-hidden', document.hidden);
-      if (document.hidden) {
+    }
+    musicButton.addEventListener('click', () => {
+      if (musicPending || !music.paused) {
+        musicDesired = false;
+        unlockOnGesture = false;
+        resumeOnReturn = false;
+        try { sessionStorage.setItem('july-music-paused', 'true'); } catch (_) {}
         audioAttempt++;
         music.pause();
         finishAudioAttempt();
+        return;
       }
+      musicDesired = true;
+      try { sessionStorage.setItem('july-music-paused', 'false'); } catch (_) {}
+      startMusic();
     });
-    window.addEventListener('pagehide', () => music.pause());
+    function startMusicFromGesture(event) {
+      if (!unlockOnGesture || !musicDesired) return;
+      if (event.target instanceof Element && event.target.closest('#musicButton,#motionButton')) return;
+      if (event.type === 'keydown' && (event.repeat || !['Enter', ' '].includes(event.key))) return;
+      startMusic();
+    }
+    ['pointerup', 'touchend', 'click', 'keydown'].forEach(type => {
+      document.addEventListener(type, startMusicFromGesture, { passive:true });
+    });
+    // Se silencia al ocultar la pestaña. Una pausa elegida nunca se deshace.
+    function suspendMusic() {
+      resumeOnReturn = resumeOnReturn || (musicDesired && (hasPlayed || musicPending));
+      audioAttempt++;
+      music.pause();
+      finishAudioAttempt();
+    }
+    function resumeMusic() {
+      if (resumeOnReturn && musicDesired && !document.hidden) {
+        resumeOnReturn = false;
+        startMusic();
+      }
+    }
+    document.addEventListener('visibilitychange', () => {
+      body.classList.toggle('page-hidden', document.hidden);
+      refreshSakura();
+      if (document.hidden) suspendMusic();
+      else resumeMusic();
+    });
+    window.addEventListener('pagehide', suspendMusic);
+    window.addEventListener('pageshow', resumeMusic);
+    if (musicDesired) startMusic();
 
     // Navegación por anclas, con foco accesible y desplazamiento natural.
     const chapters = ['carta','carino','momentos','deseo'].map(id => document.getElementById(id));
@@ -550,23 +607,174 @@
       });
     });
 
-    // Una breve apertura con pétalos; no se repite durante la lectura.
-    let opened = false;
-    document.getElementById('openLetter').addEventListener('click', () => {
-      if (opened) return;
-      opened = true;
-      if (motionOff()) return;
-      for (let i = 0; i < 9; i++) {
-        const petal = document.createElement('span');
-        petal.className = 'petal';
-        petal.setAttribute('aria-hidden','true');
-        petal.style.setProperty('--x', `${14 + i * 9}%`);
-        petal.style.setProperty('--delay', `${i * .07}s`);
-        petal.style.setProperty('--drift', `${(i % 2 ? -1 : 1) * (25 + i * 4)}px`);
-        body.appendChild(petal);
-        setTimeout(() => petal.remove(), 4500);
+    // SAKURAS: un solo lienzo, dibujos locales y partículas limitadas a 30 fps.
+    // Los gestos son pasivos: el dedo puede seguir desplazando la carta.
+    (() => {
+      const canvas = document.getElementById('sakuraCanvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const random = (min, max) => min + Math.random() * (max - min);
+      function makeSprite(flower) {
+        const sprite = document.createElement('canvas');
+        sprite.width = sprite.height = 112;
+        const paint = sprite.getContext('2d');
+        paint.translate(56, 56);
+        paint.scale(2, 2);
+        const wash = paint.createRadialGradient(0, 0, 2, 0, 0, 25);
+        wash.addColorStop(0, '#dc87aa');
+        wash.addColorStop(.42, '#f1bbd1');
+        wash.addColorStop(1, '#fff1f5');
+        paint.fillStyle = wash;
+        paint.strokeStyle = '#d991b080';
+        paint.lineWidth = .55;
+        if (flower) {
+          for (let i = 0; i < 5; i++) {
+            paint.save();
+            paint.rotate(i * Math.PI * 2 / 5);
+            paint.beginPath();
+            paint.moveTo(0, -2);
+            paint.bezierCurveTo(-12, -8, -12, -19, -5, -23);
+            paint.quadraticCurveTo(-2, -25, 0, -20);
+            paint.quadraticCurveTo(3, -25, 6, -22);
+            paint.bezierCurveTo(14, -16, 10, -7, 0, -2);
+            paint.fill();
+            paint.stroke();
+            paint.restore();
+          }
+          paint.strokeStyle = '#b76a8b';
+          paint.fillStyle = '#ad6683';
+          paint.lineWidth = .45;
+          for (let i = 0; i < 7; i++) {
+            const angle = i * Math.PI * 2 / 7;
+            const x = Math.cos(angle) * 6, y = Math.sin(angle) * 6;
+            paint.beginPath(); paint.moveTo(0, 0); paint.lineTo(x, y); paint.stroke();
+            paint.beginPath(); paint.arc(x, y, .8, 0, Math.PI * 2); paint.fill();
+          }
+          paint.beginPath(); paint.arc(0, 0, 2, 0, Math.PI * 2); paint.fill();
+        } else {
+          paint.beginPath();
+          paint.moveTo(-9, 14);
+          paint.bezierCurveTo(-15, -1, -7, -19, 5, -18);
+          paint.lineTo(6, -13); paint.lineTo(11, -16);
+          paint.bezierCurveTo(20, -3, 3, 12, -9, 14);
+          paint.fill(); paint.stroke();
+        }
+        return sprite;
       }
-    });
+      const blossom = makeSprite(true), petal = makeSprite(false);
+      let width = 0, height = 0, compact = false, frame = 0, lastFrame = 0;
+      let rain = [], trail = [], pageAway = false;
+      const pointer = { x:0, y:0, followX:0, followY:0, time:-10000, active:false };
+      let lastTrail = 0, trailX = -1000, trailY = -1000;
+      const mayAnimate = () => !motionOff() && !document.hidden && !pageAway;
+      function rainDrop(initial) {
+        const onEdge = Math.random() < .62;
+        let x = random(0, width);
+        if (onEdge) x = Math.random() < .5 ? random(0, width * .2) : random(width * .8, width);
+        const flower = Math.random() < .48;
+        return {
+          x, y:initial ? random(-25, height) : -35,
+          size:flower ? random(19, 29) : random(14, 23),
+          sprite:flower ? blossom : petal,
+          speed:random(16, 33), drift:random(-6, 11),
+          angle:random(0, Math.PI * 2), spin:random(-.32, .32),
+          phase:random(0, Math.PI * 2), opacity:random(.42, .76)
+        };
+      }
+      function resizeSakura() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        compact = width < 700;
+        const ratio = Math.min(window.devicePixelRatio || 1, compact ? 1.5 : 2);
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        rain = Array.from({ length:Math.min(36, Math.max(20, Math.round(width / 40))) }, () => rainDrop(true));
+        trail.length = 0;
+        pointer.active = false;
+        refreshSakura();
+      }
+      function notePointer(x, y) {
+        if (!mayAnimate()) return;
+        const now = performance.now();
+        if (!pointer.active || now - pointer.time > 900) {
+          pointer.followX = x; pointer.followY = y;
+        }
+        pointer.x = x; pointer.y = y; pointer.time = now; pointer.active = true;
+        if (now - lastTrail < 65 || Math.hypot(x - trailX, y - trailY) < 9) return;
+        lastTrail = now; trailX = x; trailY = y;
+        if (trail.length >= (compact ? 18 : 26)) trail.shift();
+        const life = random(1.05, 1.65);
+        trail.push({
+          x:x + random(-5, 5), y:y + random(-5, 5),
+          size:random(13, 21), sprite:Math.random() < .65 ? blossom : petal,
+          life, total:life, angle:random(0, Math.PI * 2),
+          drift:random(-14, 14), spin:random(-.7, .7)
+        });
+      }
+      document.addEventListener('pointermove', event => {
+        if (event.pointerType !== 'touch') notePointer(event.clientX, event.clientY);
+      }, { passive:true });
+      ['touchstart', 'touchmove'].forEach(type => document.addEventListener(type, event => {
+        if (event.touches.length === 1) notePointer(event.touches[0].clientX, event.touches[0].clientY);
+      }, { passive:true }));
+      document.addEventListener('pointerout', event => {
+        if (!event.relatedTarget && event.pointerType !== 'touch') pointer.active = false;
+      }, { passive:true });
+      function draw(sprite, x, y, size, angle, opacity) {
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.translate(x, y); ctx.rotate(angle);
+        ctx.drawImage(sprite, -size / 2, -size / 2, size, size);
+        ctx.restore();
+      }
+      function animate(now) {
+        frame = 0;
+        if (!mayAnimate()) { refreshSakura(); return; }
+        frame = requestAnimationFrame(animate);
+        if (lastFrame && now - lastFrame < 1000 / 30) return;
+        const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .065) : 1 / 30;
+        lastFrame = now;
+        ctx.clearRect(0, 0, width, height);
+        const reading = body.classList.contains('is-reading');
+        const textEdge = Math.max(38, (width - 640) / 2);
+        const softness = x => reading && x > textEdge && x < width - textEdge ? .27 : 1;
+        rain.forEach((drop, i) => {
+          drop.y += drop.speed * dt;
+          drop.x += drop.drift * dt;
+          drop.angle += drop.spin * dt;
+          if (drop.y > height + 35 || drop.x > width + 40 || drop.x < -40) { rain[i] = rainDrop(false); return; }
+          const x = drop.x + Math.sin(now * .00048 + drop.phase) * 16;
+          draw(drop.sprite, x, drop.y, drop.size, drop.angle, drop.opacity * softness(x));
+        });
+        for (let i = trail.length - 1; i >= 0; i--) {
+          const drop = trail[i];
+          drop.life -= dt;
+          if (drop.life <= 0) { trail.splice(i, 1); continue; }
+          drop.x += drop.drift * dt; drop.y += 24 * dt; drop.angle += drop.spin * dt;
+          const fade = drop.life / drop.total;
+          draw(drop.sprite, drop.x, drop.y, drop.size * (.7 + .3 * fade), drop.angle, .7 * fade * softness(drop.x));
+        }
+        if (pointer.active && now - pointer.time < 1300) {
+          const ease = 1 - Math.exp(-15 * dt);
+          pointer.followX += (pointer.x - pointer.followX) * ease;
+          pointer.followY += (pointer.y - pointer.followY) * ease;
+          const fade = Math.min(1, (1300 - now + pointer.time) / 450);
+          draw(blossom, pointer.followX + 13, pointer.followY + 12, 26, now * .0003, .85 * fade * softness(pointer.followX));
+        }
+      }
+      refreshSakura = () => {
+        if (!mayAnimate()) {
+          cancelAnimationFrame(frame); frame = 0; lastFrame = 0;
+          trail.length = 0; pointer.active = false;
+          ctx.clearRect(0, 0, width, height);
+        } else if (!frame) { lastFrame = 0; frame = requestAnimationFrame(animate); }
+      };
+      window.addEventListener('resize', resizeSakura, { passive:true });
+      window.addEventListener('pagehide', () => { pageAway = true; refreshSakura(); });
+      window.addEventListener('pageshow', () => { pageAway = false; refreshSakura(); });
+      resizeSakura();
+    })();
 
     // Aparición suave por párrafos, con contenido visible si JavaScript no funciona.
     if ('IntersectionObserver' in window && !motionOff()) {
